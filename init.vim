@@ -43,6 +43,7 @@ Plug 'nvim-lualine/lualine.nvim'
 
 " Debug adapter protocol
 Plug 'mfussenegger/nvim-dap'
+Plug 'mfussenegger/nvim-dap-python'
 Plug 'rcarriga/nvim-dap-ui'
 
 call plug#end()
@@ -56,12 +57,32 @@ set tabstop=2 shiftwidth=2 expandtab
 let mapleader = " " " space as leader key
 
 " File Tree
-lua require'nvim-tree'.setup()
+lua << END
+require('nvim-tree').setup {
+  view = {
+    mappings = {
+      list = { 
+        { key = "<C-e>", action = ""}
+      },
+    },
+  },
+} 
+END
 nnoremap <silent> <c-e> :NvimTreeToggle<CR>
 
 " Lualine
 lua << END
-require('lualine').setup()
+require('lualine').setup {
+  sections = {
+    lualine_c = {
+      {
+        'filename',
+        file_status = true,
+        path = 1
+      }
+    },
+  },
+}
 END
 
 " Tree sitter
@@ -75,10 +96,10 @@ EOF
 
 " coc.nvim Configuration
 let g:coc_node_path = trim(system('which node'))
-let g:coc_global_extensions = ['coc-json', 'coc-pyright']
-
-" Give more space for displaying messages.
-set cmdheight=2
+let g:coc_global_extensions = [
+  \'coc-json', 'coc-pyright',
+  \'coc-pairs', 'coc-snippets',
+\]
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
@@ -154,6 +175,8 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Moving through auto-completion suggestions
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" Autocomplete-Format code on <cr>
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " End of Coc settings
 
@@ -167,70 +190,60 @@ local dap = require('dap')
 vim.fn.sign_define('DapBreakpoint', {text='🟥', texthl='', linehl='', numhl=''})
 vim.fn.sign_define('DapStopped', {text='⭐️', texthl='', linehl='', numhl=''})
 
+-- Will remove if codellbd proves to be better
 dap.adapters.lldb = {
   type = 'executable',
   command = '/usr/bin/lldb-vscode-10', -- adjust as needed
   name = "lldb"
 }
-dap.adapters.python = {
-  type = 'executable';
-  command = '/home/zanas/.venvs/debugpy/bin/python';
-  args = { '-m', 'debugpy.adapter' };
+dap.adapters.codelldb = {
+    type = 'server',
+    host = '127.0.0.1',
+    port = 13000
 }
+
+-- TODO: Might want to remove hardcoded debugpy venv path
+-- and instead find the path dynamically
+require('dap-python').setup('~/.venvs/debugpy/bin/python')
+table.insert(require('dap').configurations.python, {
+  type = 'python',
+  request = 'attach',
+  name = 'Docker launch configuration',
+  host = "127.0.0.1",
+  port = 5678,
+  justMyCode = false,
+  pathMappings = {{
+    localRoot = vim.fn.getcwd();
+    remoteRoot = "/backend";
+  }};
+})
 
 dap.configurations.cpp = {
   {
-  name = "Launch",
-  type = "lldb",
-  request = "launch",
-  program = function()
-  return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-  end,
-  cwd = '${workspaceFolder}',
-  stopOnEntry = false,
-  args = {},
-
-  -- if you change `runInTerminal` to true, you might need to change the yama/ptrace_scope setting:
-  --
-  --    echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
-  --
-  -- Otherwise you might get the following error:
-  --
-  --    Error on launch: Failed to attach to the target process
-  --
-  -- But you should be aware of the implications:
-  -- https://www.kernel.org/doc/html/latest/admin-guide/LSM/Yama.html
-  runInTerminal = false,
+    name = "Launch",
+    type = "codelldb",
+    request = "launch",
+    program = function()
+      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    --program = '${fileDirname}/${fileBasenameNoExtension}',
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+    args = {},
+    runInTerminal = false,
+  },
+  {
+    -- If you get an "Operation not permitted" error, try disabling YAMA:
+    --  echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+    name = "Attach to process",
+    type = 'codelldb',
+    request = 'attach',
+    pid = require('dap.utils').pick_process,
+    args = {},
   },
 }
 dap.configurations.c = dap.configurations.cpp
 dap.configurations.rust = dap.configurations.cpp
-
-dap.configurations.python = {
-  {
-    -- The first three options are required by nvim-dap
-    type = 'python'; -- the type here established the link to the adapter definition: `dap.adapters.python`
-    request = 'launch';
-    name = "Launch file";
-
-    -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
-
-    program = "${file}"; -- This configuration will launch the current file if used.
-    pythonPath = function()
-      -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
-      -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
-      -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
-      local cwd = vim.fn.getcwd()
-      if vim.fn.executable(cwd .. '/venv/bin/python') == 1 then
-        return cwd .. '/venv/bin/python'
-      elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
-        return cwd .. '/.venv/bin/python'
-      else
-        return '/usr/bin/python3'
-      end
-    end;
-  },
-}
 
 require("dapui").setup({
   icons = { expanded = "▾", collapsed = "▸" },
@@ -284,6 +297,7 @@ dap.listeners.before.event_exited["dapui_config"] = function()
   dapui.close()
 end
 EOF
+
 nnoremap <leader>dh :lua require'dap'.toggle_breakpoint()<CR>
 nnoremap <S-k> :lua require'dap'.step_out()<CR>
 nnoremap <S-l> :lua require'dap'.step_into()<CR>
