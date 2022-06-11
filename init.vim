@@ -26,13 +26,18 @@ let g:plug_home = stdpath("data") . "/plugged"
 call plug#begin(plug_home)
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+
 " Theme
 Plug 'morhetz/gruvbox'
+
 " Syntax highlighting
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " LSP Ecosystem
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Snippets
+Plug 'honza/vim-snippets'
 
 " Explorer
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
@@ -45,6 +50,12 @@ Plug 'nvim-lualine/lualine.nvim'
 Plug 'mfussenegger/nvim-dap'
 Plug 'mfussenegger/nvim-dap-python'
 Plug 'rcarriga/nvim-dap-ui'
+
+" Easy jumping
+Plug 'ggandor/lightspeed.nvim'
+
+" . Repeat with plugins
+Plug 'tpope/vim-repeat'
 
 call plug#end()
 
@@ -178,10 +189,53 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 " Autocomplete-Format code on <cr>
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
+" Coc snippets
+
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+" Use <leader>x for convert visual selected code to snippet
+xmap <leader>x  <Plug>(coc-convert-snippet)
+
 " End of Coc settings
 
 " No more capital :W or :Q
 " nnoremap ; :| nnoremap : ;
+
+" Copy (relative) file path with line
+map <leader>l :let @*=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>
+
+" Vim terminal emulator
+"
+" To exit terminal-mode:                                                                                                                            
+:tnoremap <leader>q <C-\><C-n>                                                                                                                                                                      
+" To simulate i_CTRL-R in terminal-mode:
+:tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'                                                                                                                                    
+" To use CTRL+{h,j,k,l} to navigate windows from any mode:
+:tnoremap <C-h> <C-\><C-N><C-w>h
+:tnoremap <C-j> <C-\><C-N><C-w>j
+:tnoremap <C-k> <C-\><C-N><C-w>k
+:tnoremap <C-l> <C-\><C-N><C-w>l
+:inoremap <C-h> <C-\><C-N><C-w>h
+:inoremap <C-j> <C-\><C-N><C-w>j
+:inoremap <C-k> <C-\><C-N><C-w>k
+:inoremap <C-l> <C-\><C-N><C-w>l
+:nnoremap <C-h> <C-w>h
+:nnoremap <C-j> <C-w>j
+:nnoremap <C-k> <C-w>k
+:nnoremap <C-l> <C-w>l
 
 " nvim-dap 
 lua << EOF

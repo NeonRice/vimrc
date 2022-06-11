@@ -24,5 +24,8 @@
   },
   // Python
   "python.pythonPath": "python3",
-  "python.linting.flake8Enabled": true
+  "python.linting.flake8Enabled": true,
+
+  // Snippets
+  "snippets.textmateSnippetsRoots": ["~/.config/coc/snippets"]
 }
