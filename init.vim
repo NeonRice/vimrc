@@ -24,6 +24,8 @@ endif
 
 let g:plug_home = stdpath("data") . "/plugged"
 call plug#begin(plug_home)
+
+" Fuzzy finder
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
@@ -64,6 +66,9 @@ set number relativenumber
 
 " Indentation
 set tabstop=2 shiftwidth=2 expandtab
+
+" Hide highlighting left after search
+nnoremap <silent> <CR> :noh<CR><CR>
 
 let mapleader = " " " space as leader key
 
@@ -134,6 +139,9 @@ if has('nvim')
 else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
+
+" Use <leader>a for Code action
+ nmap <silent><nowait> <space>a  <Plug>(coc-codeaction-cursor)
 
 " Use ctrl-[hjkl] to select the active split!
 nmap <silent> <c-k> :wincmd k<CR>
@@ -353,9 +361,9 @@ end
 EOF
 
 nnoremap <leader>dh :lua require'dap'.toggle_breakpoint()<CR>
-nnoremap <S-k> :lua require'dap'.step_out()<CR>
-nnoremap <S-l> :lua require'dap'.step_into()<CR>
-nnoremap <S-j> :lua require'dap'.step_over()<CR>
+"nnoremap <S-k> :lua require'dap'.step_out()<CR>
+"nnoremap <S-l> :lua require'dap'.step_into()<CR>
+"nnoremap <S-j> :lua require'dap'.step_over()<CR>
 nnoremap <leader>ds :lua require'dap'.stop()<CR>
 nnoremap <leader>dn :lua require'dap'.continue()<CR>
 nnoremap <leader>dk :lua require'dap'.up()<CR>
@@ -384,5 +392,13 @@ if has("autocmd")
   " ...
 endif
 
+" Telescope
+nnoremap <leader>tf <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>tg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>tb <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>th <cmd>lua require('telescope.builtin').help_tags()<cr>
+
 " Gruvbox theme
 colorscheme gruvbox
+set background=light
+set termguicolors " Dark looks better without this
