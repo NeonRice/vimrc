@@ -25,6 +25,9 @@ endif
 let g:plug_home = stdpath("data") . "/plugged"
 call plug#begin(plug_home)
 
+" Improved startup time
+Plug  'lewis6991/impatient.nvim'
+
 " Fuzzy finder
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -60,6 +63,8 @@ Plug 'ggandor/lightspeed.nvim'
 Plug 'tpope/vim-repeat'
 
 call plug#end()
+
+lua require('impatient')
 
 " Hybrid Numbering
 set number relativenumber
@@ -232,18 +237,18 @@ map <leader>l :let @*=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>
 " To simulate i_CTRL-R in terminal-mode:
 :tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'                                                                                                                                    
 " To use CTRL+{h,j,k,l} to navigate windows from any mode:
-:tnoremap <C-h> <C-\><C-N><C-w>h
-:tnoremap <C-j> <C-\><C-N><C-w>j
-:tnoremap <C-k> <C-\><C-N><C-w>k
-:tnoremap <C-l> <C-\><C-N><C-w>l
-:inoremap <C-h> <C-\><C-N><C-w>h
-:inoremap <C-j> <C-\><C-N><C-w>j
-:inoremap <C-k> <C-\><C-N><C-w>k
-:inoremap <C-l> <C-\><C-N><C-w>l
-:nnoremap <C-h> <C-w>h
-:nnoremap <C-j> <C-w>j
-:nnoremap <C-k> <C-w>k
-:nnoremap <C-l> <C-w>l
+tnoremap <C-h> <C-\><C-N><C-w>h
+tnoremap <C-j> <C-\><C-N><C-w>j
+tnoremap <C-k> <C-\><C-N><C-w>k
+tnoremap <C-l> <C-\><C-N><C-w>l
+inoremap <C-h> <C-\><C-N><C-w>h
+inoremap <C-j> <C-\><C-N><C-w>j
+inoremap <C-k> <C-\><C-N><C-w>k
+inoremap <C-l> <C-\><C-N><C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
 " nvim-dap 
 lua << EOF
@@ -317,36 +322,27 @@ require("dapui").setup({
     edit = "e",
     repl = "r",
   },
-  sidebar = {
-    -- You can change the order of elements in the sidebar
-    elements = {
-      -- Provide as ID strings or tables with "id" and "size" keys
-      {
-        id = "scopes",
-        size = 0.25, -- Can be float or integer > 1
+  layouts = {
+      elements = {                                                                                                                                                        
+        'scopes',
+        'breakpoints',
+        'stacks',
+        'watches',
       },
-      { id = "breakpoints", size = 0.25 },
-      { id = "stacks", size = 0.25 },
-      { id = "watches", size = 00.25 },
+      size = 40,
+      position = 'left',
     },
-    size = 40,
-    position = "left", -- Can be "left", "right", "top", "bottom"
-  },
-  tray = {
-    elements = { "repl" },
-    size = 10,
-    position = "bottom", -- Can be "left", "right", "top", "bottom"
-  },
-  floating = {
-    max_height = nil, -- These can be integers or a float between 0 and 1.
-    max_width = nil, -- Floats will be treated as percentage of your screen.
-    border = "single", -- Border style. Can be "single", "double" or "rounded"
-    mappings = {
-      close = { "q", "<Esc>" },
+    {
+      elements = {
+        'repl',
+        'console',
+      },
+      size = 10,
+      position = 'bottom',
     },
-  },
   windows = { indent = 1 },
 })
+
 -- Open UI and close with events from dap
 local dap, dapui = require("dap"), require("dapui")
 dap.listeners.after.event_initialized["dapui_config"] = function()
