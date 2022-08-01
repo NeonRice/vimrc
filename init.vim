@@ -15,6 +15,8 @@
   "██░░░░░░░░████████████░░░░░░░░██  
     "████████████████████████████    
 
+
+" {{{ Vim-Plug
 " Auto Install Vim-Plug
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
@@ -40,6 +42,10 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " LSP Ecosystem
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" LSP Configs
+Plug 'neovim/nvim-lspconfig'
+" LSP 
+Plug 'hrsh7th/nvim-cmp'
 
 " Snippets
 Plug 'honza/vim-snippets'
@@ -63,19 +69,90 @@ Plug 'ggandor/lightspeed.nvim'
 Plug 'tpope/vim-repeat'
 
 call plug#end()
+" }}}
 
 lua require('impatient')
 
+" {{{ Core settings
 " Hybrid Numbering
 set number relativenumber
 
 " Indentation
 set tabstop=2 shiftwidth=2 expandtab
 
+" Use marker folding method for vimrc
+autocmd FileType vim,txt setlocal foldmethod=marker
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("nvim-0.5.0") || has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
+" Indentation
+if has("autocmd")
+  " Enable file type detection.
+  " Use the default filetype settings, so that mail gets 'tw' set to 72,
+  " 'cindent' is on in C files, etc.
+  " Also load indent files, to automatically do language-dependent indenting.
+  filetype plugin indent on
+  " ...
+endif
+
+" Gruvbox theme
+colorscheme gruvbox
+set background=light
+set termguicolors " Dark looks better without this
+
+" {{{ Mappings
+let mapleader = " " " space as leader key
+
+" Use ctrl-[hjkl] to select the active split!
+nmap <silent> <c-k> :wincmd k<CR>
+nmap <silent> <c-j> :wincmd j<CR>
+nmap <silent> <c-h> :wincmd h<CR>
+nmap <silent> <c-l> :wincmd l<CR>
+
 " Hide highlighting left after search
 nnoremap <silent> <CR> :noh<CR><CR>
 
-let mapleader = " " " space as leader key
+" Copy (relative) file path with line
+map <leader>l :let @*=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>
+
+" {{{ Terminal emulator mappings
+
+" To exit terminal-mode:                                                                                                                            
+tnoremap <leader>q <C-\><C-n>                                                                                                                                                                      
+" To simulate i_CTRL-R in terminal-mode:
+tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'                                                                                                                                    
+" TODO: Move to relevent places
+" To use CTRL+{h,j,k,l} to navigate windows from any mode:
+tnoremap <C-h> <C-\><C-N><C-w>h
+tnoremap <C-j> <C-\><C-N><C-w>j
+tnoremap <C-k> <C-\><C-N><C-w>k
+tnoremap <C-l> <C-\><C-N><C-w>l
+inoremap <C-h> <C-\><C-N><C-w>h
+inoremap <C-j> <C-\><C-N><C-w>j
+inoremap <C-k> <C-\><C-N><C-w>k
+inoremap <C-l> <C-\><C-N><C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+" }}} Terminal emulator END
+
+" }}} Mappings END
+" }}} Core settings END
 
 " File Tree
 lua << END
@@ -115,28 +192,13 @@ require('nvim-treesitter.configs').setup {
 }
 EOF
 
-" coc.nvim Configuration
+"{{{ coc.nvim Configuration
 let g:coc_node_path = trim(system('which node'))
 let g:coc_global_extensions = [
   \'coc-json', 'coc-pyright',
   \'coc-pairs', 'coc-snippets',
 \]
 
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
-
-" Don't pass messages to |ins-completion-menu|.
-set shortmess+=c
-
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-if has("nvim-0.5.0") || has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
 
 " Use <c-space> to trigger completion.
 if has('nvim')
@@ -148,11 +210,6 @@ endif
 " Use <leader>a for Code action
  nmap <silent><nowait> <space>a  <Plug>(coc-codeaction-cursor)
 
-" Use ctrl-[hjkl] to select the active split!
-nmap <silent> <c-k> :wincmd k<CR>
-nmap <silent> <c-j> :wincmd j<CR>
-nmap <silent> <c-h> :wincmd h<CR>
-nmap <silent> <c-l> :wincmd l<CR>
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -223,34 +280,8 @@ imap <C-j> <Plug>(coc-snippets-expand-jump)
 xmap <leader>x  <Plug>(coc-convert-snippet)
 
 " End of Coc settings
-
-" No more capital :W or :Q
-" nnoremap ; :| nnoremap : ;
-
-" Copy (relative) file path with line
-map <leader>l :let @*=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>
-
-" Vim terminal emulator
-"
-" To exit terminal-mode:                                                                                                                            
-:tnoremap <leader>q <C-\><C-n>                                                                                                                                                                      
-" To simulate i_CTRL-R in terminal-mode:
-:tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'                                                                                                                                    
-" To use CTRL+{h,j,k,l} to navigate windows from any mode:
-tnoremap <C-h> <C-\><C-N><C-w>h
-tnoremap <C-j> <C-\><C-N><C-w>j
-tnoremap <C-k> <C-\><C-N><C-w>k
-tnoremap <C-l> <C-\><C-N><C-w>l
-inoremap <C-h> <C-\><C-N><C-w>h
-inoremap <C-j> <C-\><C-N><C-w>j
-inoremap <C-k> <C-\><C-N><C-w>k
-inoremap <C-l> <C-\><C-N><C-w>l
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-
-" nvim-dap 
+" }}}
+" nvim-dap {{{
 lua << EOF
 local dap = require('dap')
 
@@ -378,15 +409,7 @@ nnoremap <leader>d? :lua local widgets=require'dap.ui.widgets';widgets.centered_
 vnoremap <leader>di <Cmd>lua require("dapui").eval()<CR>
 nnoremap <leader>d? :lua require'dap.ui.variables'.scopes()<CR>
 
-" Indentation?
-if has("autocmd")
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
-  " ...
-endif
+" }}}
 
 " Telescope
 nnoremap <leader>tf <cmd>lua require('telescope.builtin').find_files()<cr>
@@ -394,7 +417,3 @@ nnoremap <leader>tg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>tb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>th <cmd>lua require('telescope.builtin').help_tags()<cr>
 
-" Gruvbox theme
-colorscheme gruvbox
-set background=light
-set termguicolors " Dark looks better without this
