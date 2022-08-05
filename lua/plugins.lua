@@ -9,23 +9,23 @@ end
 -- stylua: ignore start
 require('packer').startup(function(use)
   -- Package manager
-  use 'wbthomason/packer.nvim'                                                    
+  use 'wbthomason/packer.nvim'
   --use 'tpope/vim-fugitive'                                                        -- Git commands in nvim
   --use 'tpope/vim-rhubarb'                                                         -- Fugitive-companion to interact with github
   --use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }       -- Add git related info in the signs columns and popups
   --use 'numToStr/Comment.nvim'                                                     -- "gc" to comment visual regions/lines
 
   -- Highlight, edit, and navigate code TODO: do :TSUpdate?
-  use { 'nvim-treesitter/nvim-treesitter',                                        
+  use { 'nvim-treesitter/nvim-treesitter',
     config = [[require("plugins/nvim-treesitter")]],
   }
   -- Additional textobjects for treesitter
-  use 'nvim-treesitter/nvim-treesitter-textobjects'                               
+  use 'nvim-treesitter/nvim-treesitter-textobjects'
 
   -- Collection of configurations for built-in LSP client
-  use { 'neovim/nvim-lspconfig',                                                  
+  use { 'neovim/nvim-lspconfig',
     config = [[require("plugins/nvim-lspconfig")]],
-  }                                                     
+  }
 
   -- Automatically install language servers to stdpath
   use { 'williamboman/mason.nvim',
@@ -56,10 +56,10 @@ require('packer').startup(function(use)
   }
 
   -- Awesome motion plugin
-  use { 'ggandor/lightspeed.nvim' }                                               
+  use { 'ggandor/lightspeed.nvim' }
 
   -- Best theme ever
-  use 'morhetz/gruvbox'                                                           
+  use 'morhetz/gruvbox'
 
   -- Fancier statusline
   use { 'nvim-lualine/lualine.nvim',
@@ -71,7 +71,7 @@ require('packer').startup(function(use)
   --use 'tpope/vim-sleuth'                                                          -- Detect tabstop and shiftwidth automatically
 
   -- Dot repeat for plugins
-  use { 'tpope/vim-repeat' }                                                      
+  use { 'tpope/vim-repeat' }
 
   -- Fuzzy Finder (files, lsp, etc)
   use {
