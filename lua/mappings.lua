@@ -90,7 +90,7 @@ function LSP()
       bufmap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>')
 
       -- Displays a function's signature information TODO?
-      --bufmap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
+      bufmap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
 
       -- Renames all references to the symbol under the cursor
       bufmap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>')
@@ -107,6 +107,16 @@ function LSP()
 
       -- Move to the next diagnostic
       bufmap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
+
+      -- Workspace actions
+      bufmap('n', '<space>wa', vim.lsp.buf.add_workspace_folder)
+      bufmap('n', '<space>wr', vim.lsp.buf.remove_workspace_folder)
+      bufmap('n', '<space>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+      end)
+
+      -- Format
+      bufmap('n', '<space>f', vim.lsp.buf.formatting)
     end
   })
 end

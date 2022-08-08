@@ -1,6 +1,7 @@
 local cmp = require('cmp')
 -- To help cmp expand luasnip snippets 
 local luasnip = require('luasnip')
+require('luasnip.loaders.from_vscode').lazy_load()
 
 local select_opts = {behavior = cmp.SelectBehavior.Select}
 
@@ -11,6 +12,8 @@ cmp.setup({
     {name = 'nvim_lsp', keyword_length = 3},
     {name = 'buffer', keyword_length = 3},
     {name = 'luasnip', keyword_length = 2},
+    -- Display signature help
+    {name = 'nvim_lsp_signature_help'}
   },
   snippet = {
     expand = function(args)

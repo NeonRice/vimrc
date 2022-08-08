@@ -1,8 +1,9 @@
 -- Install packer
 local fn = vim.fn
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
-  packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+  packer_bootstrap = fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim',
+    install_path })
   vim.cmd [[packadd packer.nvim]]
 end
 
@@ -15,17 +16,13 @@ require('packer').startup(function(use)
   --use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }       -- Add git related info in the signs columns and popups
   --use 'numToStr/Comment.nvim'                                                     -- "gc" to comment visual regions/lines
 
-  -- Highlight, edit, and navigate code TODO: do :TSUpdate?
+  -- Highlight, edit, and navigate code
   use { 'nvim-treesitter/nvim-treesitter',
     config = [[require("plugins/nvim-treesitter")]],
+    run = [[require('nvim-treesitter.install').update({ with_sync = true })]],
   }
   -- Additional textobjects for treesitter
   use 'nvim-treesitter/nvim-treesitter-textobjects'
-
-  -- Collection of configurations for built-in LSP client
-  use { 'neovim/nvim-lspconfig',
-    config = [[require("plugins/nvim-lspconfig")]],
-  }
 
   -- Automatically install language servers to stdpath
   use { 'williamboman/mason.nvim',
@@ -37,13 +34,13 @@ require('packer').startup(function(use)
     end,
   }
 
-  -- Autocompletion engine 
+  -- Autocompletion engine
   use {
     'hrsh7th/nvim-cmp',
     requires = {
-      'L3MON4D3/LuaSnip',
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-nvim-lsp-signature-help',
+       'L3MON4D3/LuaSnip',
+       'hrsh7th/cmp-nvim-lsp',
+      { 'hrsh7th/cmp-nvim-lsp-signature-help', after = 'nvim-cmp' },
       { 'hrsh7th/cmp-buffer', after = 'nvim-cmp' },
       { 'hrsh7th/cmp-path', after = 'nvim-cmp' },
       { 'hrsh7th/cmp-nvim-lua', after = 'nvim-cmp' },
@@ -53,6 +50,18 @@ require('packer').startup(function(use)
     },
     config = [[require("plugins/nvim-cmp")]],
     event = 'InsertEnter *',
+  }
+
+  -- Collection of configurations for built-in LSP client
+  use { 'neovim/nvim-lspconfig',
+    config = [[require("plugins/nvim-lspconfig")]],
+  }
+  -- Snippets library
+  use "rafamadriz/friendly-snippets"
+
+  -- Auto pairs
+  use { "windwp/nvim-autopairs",
+    config = [[require("plugins/nvim-autopairs")]],
   }
 
   -- Awesome motion plugin
@@ -90,7 +99,6 @@ require('packer').startup(function(use)
         --'telescope-frecency.nvim',
         'telescope-fzf-native.nvim',
       },
-      --setup = [[require('config.telescope_setup')]],
       config = [[require('plugins/telescope')]],
       cmd = 'Telescope',
       module = 'telescope',
