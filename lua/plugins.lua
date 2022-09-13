@@ -11,10 +11,19 @@ end
 require('packer').startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
-  --use 'tpope/vim-fugitive'                                                        -- Git commands in nvim
-  --use 'tpope/vim-rhubarb'                                                         -- Fugitive-companion to interact with github
-  --use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }       -- Add git related info in the signs columns and popups
-  --use 'numToStr/Comment.nvim'                                                     -- "gc" to comment visual regions/lines
+  -- Git wrapper
+  use 'tpope/vim-fugitive'
+  -- Fugitive-companion to interact with github'
+  -- use 'tpope/vim-rhubarb
+  -- Add git related info in the signs columns and popups
+  use {
+    'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require("plugins/gitsigns")
+    end
+  }
+  -- "gc" to comment visual regions/lines
+  --use 'numToStr/Comment.nvim'
 
   -- Highlight, edit, and navigate code
   use { 'nvim-treesitter/nvim-treesitter',
@@ -38,8 +47,8 @@ require('packer').startup(function(use)
   use {
     'hrsh7th/nvim-cmp',
     requires = {
-       'L3MON4D3/LuaSnip',
-       'hrsh7th/cmp-nvim-lsp',
+      'L3MON4D3/LuaSnip',
+      'hrsh7th/cmp-nvim-lsp',
       { 'hrsh7th/cmp-nvim-lsp-signature-help', after = 'nvim-cmp' },
       { 'hrsh7th/cmp-buffer', after = 'nvim-cmp' },
       { 'hrsh7th/cmp-path', after = 'nvim-cmp' },

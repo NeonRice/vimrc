@@ -23,22 +23,22 @@ function core()
   -- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
   -- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
-  -- Use ctrl-[hjkl] to select the active split!                                         
-  map('n', '<C-k>', '<CMD>wincmd k<CR>', {silent = true})
-  map('n', '<C-j>', '<CMD>wincmd j<CR>', {silent = true})
-  map('n', '<C-h>', '<CMD>wincmd h<CR>', {silent = true})
-  map('n', '<C-l>', '<CMD>wincmd l<CR>', {silent = true})
+  -- Use ctrl-[hjkl] to select the active split!
+  map('n', '<C-k>', '<CMD>wincmd k<CR>', { silent = true })
+  map('n', '<C-j>', '<CMD>wincmd j<CR>', { silent = true })
+  map('n', '<C-h>', '<CMD>wincmd h<CR>', { silent = true })
+  map('n', '<C-l>', '<CMD>wincmd l<CR>', { silent = true })
 
-  map('n', '<CR>', '<CMD>noh<CR><CR>', {silent = true})
+  map('n', '<CR>', '<CMD>noh<CR><CR>', { silent = true })
 
   -- Copy (relative) file path with line TODO
   -- map <leader>l :let @*=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>
 
   -- map('t', '<leader>q', '<C-\><C-n>')
-  -- To exit terminal-mode:                                                                                                                            
-  --  tnoremap <leader>q <C-\><C-n>                                                                                                                                                                      
+  -- To exit terminal-mode:
+  --  tnoremap <leader>q <C-\><C-n>
   --   To simulate i_CTRL-R in terminal-mode: TODO
-  --  tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'                                                                                                                                    
+  --  tnoremap <expr> <C-R> '<C-\><C-N>"'.nr2char(getchar()).'pi'
   --  TODO: Move to relevent places
   -- To use CTRL+{h,j,k,l} to navigate windows from any mode:
   --tnoremap <C-h> <C-\><C-N><C-w>h
@@ -59,6 +59,24 @@ function telescope()
   map('n', '<leader>tg', [[<cmd>Telescope git_files theme=get_dropdown<cr>]], silent)
   map('n', '<leader>ts', [[<cmd>Telescope live_grep theme=get_dropdown<cr>]], silent)
   map('n', '<leader>th', [[<cmd>Telescope help_tags theme=get_dropdown<cr>]], silent)
+  map('n', '<leader>tm', [[<cmd>Telescope marks theme=get_dropdown<cr>]], silent)
+  map('n', '<leader>t/', [[<cmd>Telescope current_buffer_fuzzy_find theme=get_dropdown<cr>]], silent)
+  map('n', '<leader>t"', [[<cmd>Telescope spell_suggest theme=get_dropdown<cr>]], silent)
+  map('n', '<leader>tt', [[<cmd>Telescope treesitter theme=get_dropdown<cr>]], silent)
+  -- TODO: Not sure if I need these
+  map('n', '<leader>tld', [[<cmd>Telescope lsp_definitions theme=get_dropdown<cr>]], silent)
+  map('n', '<leader>tli', [[<cmd>Telescope lsp_implementations theme=get_dropdown<cr>]], silent)
+  map('n', '<leader>tlr', [[<cmd>Telescope lsp_references theme=get_dropdown<cr>]], silent)
+  map('n', '<leader>tls', [[<cmd>Telescope lsp_document_symbols theme=get_dropdown<cr>]], silent)
+  -- TODO: Dynamic for performance?
+  map('n', '<leader>tlws', [[<cmd>Telescope lsp_dynamic_workspace_symbols theme=get_dropdown<cr>]], silent)
+  map('n', '<leader>tlD', [[<cmd>Telescope diagnostics theme=get_dropdown<cr>]], silent)
+  map('n', '<leader>tlci', [[<cmd>Telescope lsp_incoming_calls theme=get_dropdown<cr>]], silent)
+  map('n', '<leader>tlco', [[<cmd>Telescope lsp_outgoing_calls theme=get_dropdown<cr>]], silent)
+
+  -- TODO: (Currently in Telescope config)
+  -- ['<c-d>'] = require('telescope.actions').delete_buffer
+
 end
 
 function LSP()
@@ -67,7 +85,7 @@ function LSP()
     desc = 'LSP actions',
     callback = function()
       local bufmap = function(mode, lhs, rhs)
-        local opts = {buffer = true}
+        local opts = { buffer = true }
         map(mode, lhs, rhs, opts)
       end
 
@@ -86,7 +104,7 @@ function LSP()
       -- Jumps to the definition of the type symbol
       bufmap('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>')
 
-      -- Lists all the references 
+      -- Lists all the references
       bufmap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>')
 
       -- Displays a function's signature information TODO?

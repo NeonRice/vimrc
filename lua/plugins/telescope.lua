@@ -25,6 +25,17 @@ telescope.setup {
       ignore_current_buffer = true,
       sort_mru = true,
       previewer = false,
+      # TODO: Move to mappings.lua
+      mappings = {
+        i = {
+          --["<c-a>"] = vim.cmd "!normal! I",
+          --["<c-e>"] = vim.cmd "!normal! A",
+          --["<c-u>"] = vim.cmd "!normal! c0",
+        },
+        n = {
+          ["x"] = require("telescope.actions").delete_buffer,
+        }
+      }
     },
   },
 }
