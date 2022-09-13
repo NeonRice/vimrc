@@ -12,8 +12,12 @@ function options()
 
   -- Tabs are 2 spaces
   opt.tabstop = 2
+  opt.softtabstop = 2
   opt.shiftwidth = 2
   opt.expandtab = true
+
+  -- Round indent to multiple of shiftwidth
+  opt.shiftround = true
 
   -- Numbering is relative
   -- opt.number = relativenumber
