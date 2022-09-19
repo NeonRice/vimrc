@@ -1,6 +1,7 @@
 local opt = vim.opt
 local o = vim.o
 local wo = vim.wo
+local g = vim.g
 
 function options()
    -- Case insensitive searching UNLESS /C or capital in search
@@ -9,6 +10,11 @@ function options()
 
   -- Decrease update time
   o.updatetime = 250
+
+  -- Enable filetype.lua
+  g.do_filetype_lua = 1
+  -- Disable filetype.vim
+  g.did_load_filetypes = 0
 
   -- Tabs are 2 spaces
   opt.tabstop = 2
@@ -44,7 +50,7 @@ end
 function colorscheme()
   opt.background = 'light'
   opt.termguicolors = true -- Looks bad with dark mode
-  vim.g.gruvbox_material_better_performance = 1
+  g.gruvbox_material_better_performance = 1
   vim.cmd [[colorscheme gruvbox-material]]
 end
 
