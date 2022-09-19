@@ -24,10 +24,10 @@ require('packer').startup(function(use)
   }
   -- "gc" to comment visual regions/lines
   use {
-      'numToStr/Comment.nvim',
-      config = function()
-          require('Comment').setup()
-      end
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
+    end
   }
 
   -- Highlight, edit, and navigate code
@@ -81,8 +81,14 @@ require('packer').startup(function(use)
   -- Awesome motion plugin
   use { 'ggandor/lightspeed.nvim' }
 
+  use {
+    "folke/which-key.nvim",
+    config = function()
+      require("which-key").setup{}
+    end
+  }
   -- Best theme ever
-  use 'morhetz/gruvbox'
+  use 'sainnhe/gruvbox-material'
 
   -- Fancier statusline
   use { 'nvim-lualine/lualine.nvim',
@@ -101,7 +107,7 @@ require('packer').startup(function(use)
     {
       'nvim-telescope/telescope.nvim',
       requires = {
-        --'nvim-lua/popup.nvim',
+        'nvim-lua/popup.nvim',
         'nvim-lua/plenary.nvim',
         --'telescope-frecency.nvim',
         'telescope-fzf-native.nvim',
