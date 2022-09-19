@@ -7,10 +7,14 @@ if fn.empty(fn.glob(install_path)) > 0 then
   vim.cmd [[packadd packer.nvim]]
 end
 
+require('impatient')
+
 -- stylua: ignore start
 require('packer').startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
+  -- Improved startup time
+  use 'lewis6991/impatient.nvim'
   -- Git wrapper
   use 'tpope/vim-fugitive'
   -- Fugitive-companion to interact with github'
@@ -84,7 +88,7 @@ require('packer').startup(function(use)
   use {
     "folke/which-key.nvim",
     config = function()
-      require("which-key").setup{}
+      require("which-key").setup {}
     end
   }
   -- Best theme ever
