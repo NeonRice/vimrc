@@ -11,11 +11,6 @@ function options()
   -- Decrease update time
   o.updatetime = 250
 
-  -- Enable filetype.lua
-  g.do_filetype_lua = 1
-  -- Disable filetype.vim
-  g.did_load_filetypes = 0
-
   -- Tabs are 2 spaces
   opt.tabstop = 2
   opt.softtabstop = 2
