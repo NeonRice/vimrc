@@ -24,20 +24,20 @@ require('gitsigns').setup {
     end, { expr = true })
 
     -- Actions
-    bufmap({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>')
-    bufmap({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>')
-    bufmap('n', '<leader>hS', gs.stage_buffer)
-    bufmap('n', '<leader>hu', gs.undo_stage_hunk)
-    bufmap('n', '<leader>hR', gs.reset_buffer)
-    bufmap('n', '<leader>hp', gs.preview_hunk)
-    bufmap('n', '<leader>hb', function() gs.blame_line { full = true } end)
-    bufmap('n', '<leader>bt', gs.toggle_current_line_blame)
-    bufmap('n', '<leader>hd', gs.diffthis)
-    bufmap('n', '<leader>hD', function() gs.diffthis('~') end)
-    bufmap('n', '<leader>td', gs.toggle_deleted)
+    bufmap({ 'n', 'v' }, '<leader>hs', ':Gitsigns stage_hunk<CR>', {desc="Stage hunk"})
+    bufmap({ 'n', 'v' }, '<leader>hr', ':Gitsigns reset_hunk<CR>', {desc="Reset hunk"})
+    bufmap('n', '<leader>hS', gs.stage_buffer, {desc="Stage buffer"})
+    bufmap('n', '<leader>hu', gs.undo_stage_hunk, {desc="Reset hunk stage"})
+    bufmap('n', '<leader>hR', gs.reset_buffer, {desc="Reset buffer stage"})
+    bufmap('n', '<leader>hp', gs.preview_hunk, {desc="Preview hunk"})
+    bufmap('n', '<leader>hb', function() gs.blame_line { full = true } end, {desc="Blame line"})
+    bufmap('n', '<leader>bt', gs.toggle_current_line_blame, {desc="Toggle line blame"})
+    bufmap('n', '<leader>hd', gs.diffthis, {desc="Git hunk diff"})
+    bufmap('n', '<leader>hD', function() gs.diffthis('~') end, {desc="Git buffer diff"})
+    bufmap('n', '<leader>td', gs.toggle_deleted, {desc="Toggle deleted"})
 
     -- Text object
-    bufmap({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+    bufmap({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', {desc="Hunk"})
   end,
   --signs = {
   --  add          = {hl = 'GitSignsAdd'   , text = '│', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},

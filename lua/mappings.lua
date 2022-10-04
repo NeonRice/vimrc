@@ -2,6 +2,12 @@ local silent = { silent = true }
 local map = vim.keymap.set
 local g = vim.g
 
+local function bufmap(mode, l, r, opts)
+  opts = opts or {}
+  opts.buffer = true
+  vim.keymap.set(mode, l, r, opts)
+end
+
 function mappings()
   core()
   -- Plugins
@@ -23,7 +29,7 @@ function core()
   -- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
   -- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
-  map('n', '<CR>', '<CMD>noh<CR><CR>', { silent = true })
+  map('n', '<CR>', '<CMD>noh<CR><CR>', silent)
 
   -- Copy (relative) file path with line TODO
   -- map <leader>l :let @*=fnamemodify(expand("%"), ":~:.") . ":" . line(".")<CR>
@@ -83,57 +89,61 @@ function LSP()
     pattern = 'LspAttached',
     desc = 'LSP actions',
     callback = function()
-      local bufmap = function(mode, lhs, rhs)
-        local opts = { buffer = true }
-        map(mode, lhs, rhs, opts)
-      end
+      bufmap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>',
+        { desc = "Display hover information about the symbol under the cursor" })
 
-      -- Displays hover information about the symbol under the cursor
-      bufmap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>')
+      bufmap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>',
+        { desc = "Jump to definition" })
 
-      -- Jump to the definition
-      bufmap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>')
+      bufmap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>',
+        { desc = "Jump to declaration" })
 
-      -- Jump to declaration
-      bufmap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>')
+      bufmap('n', 'gI', '<cmd>lua vim.lsp.buf.implementation()<cr>',
+        { desc = "List all the implementations for the symbol under the cursor" })
 
-      -- Lists all the implementations for the symbol under the cursor
-      bufmap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>')
+      bufmap('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>',
+        { desc = "Jump to the definition of the type symbol" })
 
-      -- Jumps to the definition of the type symbol
-      bufmap('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>')
+      bufmap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>',
+        { desc = "List all the references" })
 
-      -- Lists all the references
-      bufmap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>')
+      -- Displays a function's signature information TODO:?
+      bufmap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<cr>',
+        { desc = "Display a function's signature info" })
 
-      -- Displays a function's signature information TODO?
-      bufmap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<cr>')
-
-      -- Format
-      bufmap('n', '<leader>rf', vim.lsp.buf.formatting)
+      bufmap('n', '<leader>rf', vim.lsp.buf.format,
+        { desc = "Format current buffer" })
 
       -- Renames all references to the symbol under the cursor
-      bufmap('n', '<leader>rr', '<cmd>lua vim.lsp.buf.rename()<cr>')
+      bufmap('n', '<leader>rr', '<cmd>lua vim.lsp.buf.rename()<cr>',
+        { desc = "Rename all references" })
 
       -- Selects a code action available at the current cursor position
-      bufmap('n', '<leader>sa', '<cmd>lua vim.lsp.buf.code_action()<cr>')
-      bufmap('x', '<leader>sa', '<cmd>lua vim.lsp.buf.range_code_action()<cr>')
+      bufmap('n', '<leader>sa', '<cmd>lua vim.lsp.buf.code_action()<cr>',
+        { desc = "Show code actions" })
+      bufmap('x', '<leader>sa', '<cmd>lua vim.lsp.buf.range_code_action()<cr>',
+        { desc = "Show code actions for selection" })
 
       -- Show diagnostics in a floating window
-      bufmap('n', '<leader>se', '<cmd>lua vim.diagnostic.open_float()<cr>')
+      bufmap('n', '<leader>se', '<cmd>lua vim.diagnostic.open_float()<cr>',
+        { desc = "Show diagnostics" })
 
       -- Move to the previous diagnostic
-      bufmap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
+      bufmap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>',
+        { desc = "Previous diagnostic" })
 
       -- Move to the next diagnostic
-      bufmap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
+      bufmap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>',
+        { desc = "Next diagnostic" })
 
       -- Workspace actions
-      bufmap('n', '<leader>wa', vim.lsp.buf.add_workspace_folder)
-      bufmap('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder)
+      bufmap('n', '<leader>wa', vim.lsp.buf.add_workspace_folder,
+        { desc = "Add workspace folder" })
+      bufmap('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder,
+        { desc = "Remove workspace folder" })
       bufmap('n', '<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-      end)
+      end, { desc = "List workspace folders" })
 
     end
   })
