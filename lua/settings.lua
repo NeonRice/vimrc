@@ -17,6 +17,9 @@ function options()
   opt.shiftwidth = 2
   opt.expandtab = true
 
+  -- Hide command line
+  opt.cmdheight = 0
+
   -- Round indent to multiple of shiftwidth
   opt.shiftround = true
 
