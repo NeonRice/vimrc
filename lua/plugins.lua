@@ -19,6 +19,8 @@ require('packer').startup(function(use)
   use 'tpope/vim-fugitive'
   -- Fugitive-companion to interact with github'
   -- use 'tpope/vim-rhubarb
+  -- Additional mappings from tpope
+  use 'tpope/vim-unimpaired'
   -- Add git related info in the signs columns and popups
   use {
     'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' },
