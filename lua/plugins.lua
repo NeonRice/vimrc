@@ -103,6 +103,25 @@ require('packer').startup(function(use)
   --use 'lukas-reineke/indent-blankline.nvim'                                       -- Add indentation guides even on blank lines
   --use 'tpope/vim-sleuth'                                                          -- Detect tabstop and shiftwidth automatically
 
+  use {
+    "kylechui/nvim-surround",
+    -- tag = "*", -- Use for stability; omit to use `main` branch for the latest features
+    config = function()
+      require("nvim-surround").setup {
+        keymaps = {
+          insert = "<C-g>s",
+          insert_line = "<C-g>S",
+          normal = "gs",
+          normal_cur = "gss",
+          normal_line = "gS",
+          normal_cur_line = "gSS",
+          visual = "gs",
+          visual_line = "gS",
+        },
+      }
+    end
+  }
+
   -- Dot repeat for plugins
   use { 'tpope/vim-repeat' }
 
