@@ -117,6 +117,8 @@ require('packer').startup(function(use)
           normal_cur_line = "gSS",
           visual = "gs",
           visual_line = "gS",
+          delete = "ds",
+          change = "cs",
         },
       }
     end
