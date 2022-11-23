@@ -36,6 +36,9 @@ function options()
   -- Save undo history
   o.undofile = true
 
+  -- Make popups transparent
+  o.pumblend = 20
+
   -- nvim-cmp Documentation asked to set these
   opt.completeopt = {'menu', 'menuone', 'noselect'}
 end
