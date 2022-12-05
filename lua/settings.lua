@@ -24,7 +24,7 @@ function options()
   opt.shiftround = true
 
   -- Numbering is relative
-  -- opt.number = relativenumber
+  o.relativenumber = true
 
   -- TODO: Not sure about these
   -- Set highlight on search

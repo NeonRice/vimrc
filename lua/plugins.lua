@@ -96,13 +96,20 @@ require('packer').startup(function(use)
   -- Best theme ever
   use 'sainnhe/gruvbox-material'
 
+  -- Icon API
+  use { 'kyazdani42/nvim-web-devicons',
+    config = [[require 'nvim-web-devicons'.setup()]]
+  }
+
   -- Fancier statusline
   use { 'nvim-lualine/lualine.nvim',
     config = [[require("plugins/lualine")]],
     requires = { 'kyazdani42/nvim-web-devicons', opt = true },
   }
 
-  --use 'lukas-reineke/indent-blankline.nvim'                                       -- Add indentation guides even on blank lines
+  -- Add indentation guides even on blank lines
+  use 'lukas-reineke/indent-blankline.nvim'
+
   --use 'tpope/vim-sleuth'                                                          -- Detect tabstop and shiftwidth automatically
 
   use {
