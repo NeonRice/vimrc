@@ -60,12 +60,12 @@ require('packer').startup(function(use)
     requires = {
       'L3MON4D3/LuaSnip',
       'hrsh7th/cmp-nvim-lsp',
-      { 'hrsh7th/cmp-nvim-lsp-signature-help', after = 'nvim-cmp' },
       { 'hrsh7th/cmp-buffer', after = 'nvim-cmp' },
       { 'hrsh7th/cmp-path', after = 'nvim-cmp' },
       { 'hrsh7th/cmp-nvim-lua', after = 'nvim-cmp' },
       { 'saadparwaiz1/cmp_luasnip', after = 'nvim-cmp' },
-      { 'hrsh7th/cmp-nvim-lsp-document-symbol', after = 'nvim-cmp' },
+      -- TODO:
+      -- { 'hrsh7th/cmp-nvim-lsp-document-symbol', after = 'nvim-cmp' },
       --'lukas-reineke/cmp-under-comparator',
     },
     config = [[require("plugins/nvim-cmp")]],
@@ -76,13 +76,36 @@ require('packer').startup(function(use)
   use { 'neovim/nvim-lspconfig',
     config = [[require("plugins/nvim-lspconfig")]],
   }
+
+  use 'p00f/clangd_extensions.nvim'
+
   -- Snippets library
   use "rafamadriz/friendly-snippets"
+
+  -- Refactoring tool
+  --[[ use {
+    "ThePrimeagen/refactoring.nvim",
+    requires = {
+      { "nvim-lua/plenary.nvim" },
+      { "nvim-treesitter/nvim-treesitter" }
+    }
+  } ]]
 
   -- Auto pairs
   use { "windwp/nvim-autopairs",
     config = [[require("plugins/nvim-autopairs")]],
   }
+
+  -- Tabout out of pairs
+  use {
+    'abecodes/tabout.nvim',
+    config = [[require('tabout').setup{}]],
+    wants = { 'nvim-treesitter' },
+    after = { 'nvim-cmp' }
+  }
+
+  -- Shows treesitter context
+  use { "romgrk/nvim-treesitter-context" }
 
   -- Awesome motion plugin
   use { 'ggandor/lightspeed.nvim' }
@@ -148,7 +171,7 @@ require('packer').startup(function(use)
         --'nvim-telescope/telescope-ui-select.nvim',
       },
       wants = {
-        --'popup.nvim',
+        'popup.nvim',
         'plenary.nvim',
         --'telescope-frecency.nvim',
         'telescope-fzf-native.nvim',

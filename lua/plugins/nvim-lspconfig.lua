@@ -59,15 +59,25 @@ lspconfig.sumneko_lua.setup({
   settings = {
     Lua = {
       diagnostics = {
-        globals = {"vim"},
+        globals = { "vim" },
       },
       telemetry = {
         enable = false
+      },
+      workspace = {
+        checkThirdParty = false,
+        -- If i want to see autocompletion for vim stuff.. Slow on a laptop
+        -- library = vim.api.nvim_get_runtime_file('', true),
       }
     },
   },
 })
 
-lspconfig.pyright.setup({})
+lspconfig.pylsp.setup({})
 
-lspconfig.clangd.setup({})
+local clangd_config = vim.deepcopy(lsp_defaults)
+clangd_config.on_attach = function(client, bufnr)
+  lsp_defaults.on_attach(client, bufnr)
+  require("plugins/clangd_extensions").on_attach()
+end
+lspconfig.clangd.setup(clangd_config)
