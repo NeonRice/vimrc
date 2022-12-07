@@ -3,8 +3,8 @@ local o = vim.o
 local wo = vim.wo
 local g = vim.g
 
-function options()
-   -- Case insensitive searching UNLESS /C or capital in search
+local function options()
+  -- Case insensitive searching UNLESS /C or capital in search
   o.ignorecase = true
   o.smartcase = true
 
@@ -39,23 +39,26 @@ function options()
   -- Make popups transparent
   o.pumblend = 20
 
+  -- Hightlight cursor line
+  o.cursorline = true
+
   -- nvim-cmp Documentation asked to set these
-  opt.completeopt = {'menu', 'menuone', 'noselect'}
+  opt.completeopt = { 'menu', 'menuone', 'noselect' }
 end
 
-function window_options()
+local function window_options()
   -- Make line numbers default
   wo.number = true
 end
 
-function colorscheme()
+local function colorscheme()
   opt.background = 'light'
   opt.termguicolors = true -- Looks bad with dark mode
   g.gruvbox_material_better_performance = 1
   vim.cmd [[colorscheme gruvbox-material]]
 end
 
-function settings()
+local function settings()
   options()
   window_options()
   colorscheme()
