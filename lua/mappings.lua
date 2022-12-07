@@ -58,6 +58,7 @@ function telescope()
   map('n', '<leader>ob', [[<cmd>Telescope buffers show_all_buffers=true theme=get_dropdown<cr>]], silent)
   -- map('n', '<leader>tr', [[<cmd>Telescope frecency theme=get_dropdown<cr>]], silent)
   map('n', '<leader>og', [[<cmd>Telescope git_files theme=get_dropdown<cr>]], silent)
+  map('n', '<leader>op', [[<cmd>Telescope resume theme=get_dropdown<cr>]], silent)
 
   -- Find
   map('n', '<leader>fd', [[<cmd>Telescope live_grep theme=get_dropdown<cr>]], silent)
@@ -107,8 +108,8 @@ function LSP()
       bufmap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>',
         { desc = "List all the references" })
 
-      -- Displays a function's signature information TODO:?
-      bufmap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<cr>',
+      -- Displays a function's signature information
+      bufmap({ 'n', 'i' }, '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<cr>',
         { desc = "Display a function's signature info" })
 
       bufmap('n', '<leader>rf', vim.lsp.buf.format,
@@ -151,13 +152,6 @@ end
 
 function gitsigns(bufnr)
   local gs = package.loaded.gitsigns
-
-  -- TODO: Standardize..
-  local function bufmap(mode, l, r, opts)
-    opts = opts or {}
-    opts.buffer = bufnr
-    vim.keymap.set(mode, l, r, opts)
-  end
 
   -- Navigation
   bufmap('n', ']c', function()
