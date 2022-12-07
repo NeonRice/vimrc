@@ -3,17 +3,16 @@ local cmp = require('cmp')
 local luasnip = require('luasnip')
 require('luasnip.loaders.from_vscode').lazy_load()
 
-local select_opts = {behavior = cmp.SelectBehavior.Select}
+local select_opts = { behavior = cmp.SelectBehavior.Select }
 
 cmp.setup({
   -- Autocompletion sources, order determines priority
   sources = {
-    {name = 'path'},
-    {name = 'nvim_lsp', keyword_length = 3},
-    {name = 'buffer', keyword_length = 3},
-    {name = 'luasnip', keyword_length = 2},
-    -- Display signature help
-    {name = 'nvim_lsp_signature_help'}
+    { name = 'nvim_lua' },
+    { name = 'nvim_lsp' },
+    { name = 'path' },
+    { name = 'luasnip' },
+    { name = 'buffer', keyword_length = 5 },
   },
   snippet = {
     expand = function(args)
@@ -28,7 +27,7 @@ cmp.setup({
   },
   formatting = {
     -- Order of text elements
-    fields = {'menu', 'abbr', 'kind'},
+    fields = { 'menu', 'abbr', 'kind' },
     format = function(entry, item)
       -- Formatting function, setting icons for entries
       local menu_icon = {
@@ -37,11 +36,11 @@ cmp.setup({
         buffer = 'Ω',
         path = '🖫',
       }
-
       item.menu = menu_icon[entry.source.name]
       return item
     end,
   },
+  experimental = { ghost_text = true },
   -- Mappings for completion TODO: Move to mappings.lua
   mapping = {
     ['<Up>'] = cmp.mapping.select_prev_item(select_opts),
@@ -54,7 +53,7 @@ cmp.setup({
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
 
     ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({select = true}),
+    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
 
     -- Jump to next placeholder in the snippet
     ['<C-d>'] = cmp.mapping(function(fallback)
@@ -63,7 +62,7 @@ cmp.setup({
       else
         fallback()
       end
-    end, {'i', 's'}),
+    end, { 'i', 's' }),
 
     -- Jump to previous placeholder in the snippet
     ['<C-b>'] = cmp.mapping(function(fallback)
@@ -72,30 +71,30 @@ cmp.setup({
       else
         fallback()
       end
-    end, {'i', 's'}),
+    end, { 'i', 's' }),
 
-    -- If completion visible, move to next completion,
-    -- if line empty insert TAB, if cursor inside word trigger auto-completion
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      local col = vim.fn.col('.') - 1
-
-      if cmp.visible() then
-        cmp.select_next_item(select_opts)
-      elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
-        fallback()
-      else
-        cmp.complete()
-      end
-    end, {'i', 's'}),
-
-    -- If completion visible, move to previous suggestion
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item(select_opts)
-      else
-        fallback()
-      end
-    end, {'i', 's'}),
+    -- -- If completion visible, move to next completion,
+    -- -- if line empty insert TAB, if cursor inside word trigger auto-completion
+    -- ['<Tab>'] = cmp.mapping(function(fallback)
+    --   local col = vim.fn.col('.') - 1
+    --
+    --   if cmp.visible() then
+    --     cmp.select_next_item(select_opts)
+    --   elseif col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+    --     fallback()
+    --   else
+    --     cmp.complete()
+    --   end
+    -- end, { 'i', 's' }),
+    --
+    -- -- If completion visible, move to previous suggestion
+    -- ['<S-Tab>'] = cmp.mapping(function(fallback)
+    --   if cmp.visible() then
+    --     cmp.select_prev_item(select_opts)
+    --   else
+    --     fallback()
+    --   end
+    -- end, { 'i', 's' }),
   },
 })
 
