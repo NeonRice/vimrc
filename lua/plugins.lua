@@ -64,6 +64,7 @@ require('packer').startup(function(use)
       { 'hrsh7th/cmp-path', after = 'nvim-cmp' },
       { 'hrsh7th/cmp-nvim-lua', after = 'nvim-cmp' },
       { 'saadparwaiz1/cmp_luasnip', after = 'nvim-cmp' },
+      { 'onsails/lspkind-nvim', opt = true }
       -- TODO:
       -- { 'hrsh7th/cmp-nvim-lsp-document-symbol', after = 'nvim-cmp' },
       --'lukas-reineke/cmp-under-comparator',
