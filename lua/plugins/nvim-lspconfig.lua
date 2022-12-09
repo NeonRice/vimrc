@@ -42,6 +42,13 @@ local lsp_defaults = {
   end
 }
 
+-- Use signs for diagnostics
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+  local hl = "DiagnosticSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+
 local lspconfig = require('lspconfig')
 
 -- Merge our set default config with global lspconfig
