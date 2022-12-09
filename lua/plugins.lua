@@ -7,7 +7,7 @@ if fn.empty(fn.glob(install_path)) > 0 then
   vim.cmd [[packadd packer.nvim]]
 end
 
-require('impatient')
+pcall(require, 'impatient')
 
 -- stylua: ignore start
 require('packer').startup(function(use)
