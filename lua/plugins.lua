@@ -64,7 +64,6 @@ require('packer').startup(function(use)
       { 'hrsh7th/cmp-path', after = 'nvim-cmp' },
       { 'hrsh7th/cmp-nvim-lua', after = 'nvim-cmp' },
       { 'saadparwaiz1/cmp_luasnip', after = 'nvim-cmp' },
-      { 'onsails/lspkind-nvim', opt = true, after = 'nvim-cmp' }
       -- TODO:
       -- { 'hrsh7th/cmp-nvim-lsp-document-symbol', after = 'nvim-cmp' },
       --'lukas-reineke/cmp-under-comparator',
@@ -72,6 +71,8 @@ require('packer').startup(function(use)
     config = [[require("plugins/nvim-cmp")]],
     event = 'InsertEnter *',
   }
+  -- Predefined icons for nvim-cmp menu
+  use "onsails/lspkind-nvim"
 
   -- Collection of configurations for built-in LSP client
   use { 'neovim/nvim-lspconfig',
@@ -132,7 +133,13 @@ require('packer').startup(function(use)
   }
 
   -- Add indentation guides even on blank lines
-  use 'lukas-reineke/indent-blankline.nvim'
+  use { 'lukas-reineke/indent-blankline.nvim',
+    config = function ()
+      require('indent_blankline').setup {
+        show_current_context = true
+      }
+    end
+  }
 
   --use 'tpope/vim-sleuth'                                                          -- Detect tabstop and shiftwidth automatically
 

@@ -146,6 +146,9 @@ function LSP()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
       end, { desc = "List workspace folders" })
 
+      -- Open symbol outline
+      bufmap('n', '<leader>ss', ":SymbolsOutline<CR>",
+        { desc = "Show symbols outline" })
     end
   })
 end
