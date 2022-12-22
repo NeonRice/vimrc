@@ -74,6 +74,9 @@ require('packer').startup(function(use)
   -- Predefined icons for nvim-cmp menu
   use "onsails/lspkind-nvim"
 
+  -- Set configuration to .editorconfig in path
+  use 'gpanders/editorconfig.nvim'
+
   -- Collection of configurations for built-in LSP client
   use { 'neovim/nvim-lspconfig',
     config = [[require("plugins/nvim-lspconfig")]],
