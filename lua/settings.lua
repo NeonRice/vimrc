@@ -36,6 +36,9 @@ local function options()
   -- Save undo history
   o.undofile = true
 
+  -- Disable ttimeout, making ESC instant
+  o.ttimeout = false
+
   -- Make popups transparent
   o.pumblend = 20
 
